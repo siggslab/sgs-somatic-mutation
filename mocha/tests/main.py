@@ -21,7 +21,7 @@ cluster = dataproc.setup_dataproc(
     init=['gs://cpg-reference/hail_dataproc/install_common.sh'],
     cluster_name='My Cluster with max-age=1h',
 )
-cluster.add_job('query.py', job_name='example')
+cluster.add_job('query2.py', job_name='example')
 
 
 # Don't wait, which avoids resubmissions if this job gets preempted.
