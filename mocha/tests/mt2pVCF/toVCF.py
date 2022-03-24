@@ -72,7 +72,7 @@ def query(rerun):
     if rerun or not hl.hadoop_exists(output_vcf):
         mt = hl.read_matrix_table(BK_test_data)
         #mt22 = mt.filter_rows(mt.locus.contig == '22')
-        cur_chr = '22'
+        cur_chr = 'chr22'
         outputVCF(mt, cur_chr, 5000, output_vcf)
 
 
