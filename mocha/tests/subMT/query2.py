@@ -20,13 +20,13 @@ def query(rerun):
     sample_qc_path2 = output_path('chr22.mt')
     if rerun or not hl.hadoop_exists(sample_qc_path1):
         mt = hl.read_matrix_table(BK_test_data)
-        mt = mt.head(10)
-        mt_qc = hl.sample_qc(mt)
+        mt1 = mt.head(10)
+        mt_qc = hl.sample_qc(mt1)
         mt_qc.write(sample_qc_path1)
         
         # filter
-        mt = mt.filter_rows((mt.locus.contig == 'chr22') & (mt.alleles.length() > 1) & (hl.agg.any(mt.LGT.is_non_ref())))
-        mt_qc = hl.sample_qc(mt)
+        mt2 = mt.filter_rows((mt.locus.contig == 'chr22') & (mt.alleles.length() > 1) & (hl.agg.any(mt.LGT.is_non_ref())))
+        mt_qc = hl.sample_qc(mt2)
         mt_qc.write(sample_qc_path2)
 
 
