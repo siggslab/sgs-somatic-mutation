@@ -25,7 +25,7 @@ def query(rerun):
         mt_qc.write(sample_qc_path1)
         
         # filter
-        mt2 = mt.filter_rows((mt.locus.contig == 'chr22') & (mt.alleles.length() > 1) & (hl.agg.any(mt.LGT.is_non_ref())))
+        mt2 = mt.filter_rows((mt.locus.contig == 'chr22') & (mt.alleles.length() > 1))
         mt_qc = hl.sample_qc(mt2)
         mt_qc.write(sample_qc_path2)
 
