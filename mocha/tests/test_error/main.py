@@ -7,6 +7,8 @@ import hailtop.batch as hb
 from cpg_utils.hail import remote_tmpdir
 from analysis_runner import dataproc
 
+import randdafwewerwrwe
+
 service_backend = hb.ServiceBackend(
     billing_project=os.getenv('HAIL_BILLING_PROJECT'), remote_tmpdir=remote_tmpdir()
 )
