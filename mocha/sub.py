@@ -8,9 +8,26 @@ https://anaconda.org/cpg/analysis-runner
 """
 
 from cpg_utils.hail import output_path
+from cpg_utils.hail import remote_tmpdir
+
+import hailtop.batch as hb
+
 import click
 import os
-from common.hail import makeBatch
+
+BILLING_PROJECT = os.getenv('HAIL_BILLING_PROJECT')
+assert BILLING_PROJECT
+
+def makeBatch():
+    """
+    make the batch backend
+    """
+    # Initializing Batch
+    backend = hb.ServiceBackend(
+        billing_project=BILLING_PROJECT, remote_tmpdir=remote_tmpdir()
+    )
+    return hb.Batch(backend=backend, default_image=os.getenv('DRIVER_IMAGE'))
+
 
 @click.command()
 @click.option('--cmd', help='command to run') 
@@ -21,7 +38,8 @@ from common.hail import makeBatch
 @click.option("--mem", default='4Gi', help='Memory')
 @click.option("--disk", default="10Gi", help="disk size")
 @click.option("--mount", default="", help="mount")
-def sub(cmd, jobname, time, image, cpu, mem, disk, mount):
+@click.option("--readonly", default=True, help="mount read only"
+def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
     batch = makeBatch()
     j = batch.new_job(jobname)
     j.command(f"{cmd} &> {j.output_log}")
@@ -39,7 +57,7 @@ def sub(cmd, jobname, time, image, cpu, mem, disk, mount):
         if len(mounts) != 2:
             print("error of mount")
         else:
-            j.cloudfuse(mounts[0], mounts[1])
+            j.cloudfuse(mounts[0], mounts[1], read_only=readonly)
 
     batch.write_output(j.output_log, output_path(jobname + ".log"))
 
