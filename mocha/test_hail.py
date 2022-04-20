@@ -10,7 +10,7 @@ from cpg_utils.hail import output_path
 @click.option('--dataset', help="data to query")
 @click.option('--output', help="output name")
 @click.option('--rerun', help='Whether to overwrite cached files', default=False)
-def query(dataset, output, return):
+def query(dataset, output, rerun):
 
     logfile = output_path(output + ".log")
     sys.stdout = open(logfile, 'w')
