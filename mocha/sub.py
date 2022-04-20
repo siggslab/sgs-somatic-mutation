@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Submit program to CPG
 Suggested programmed by zzl<zzl09yan@gmail.com>
