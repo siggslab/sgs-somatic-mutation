@@ -7,7 +7,7 @@ from cpg_utils.hail import output_path
 
 @click.command()
 @click.option('--dataset', help="data to query")
-@click.pition('--chrom', help="chromsome")
+@click.option('--chrom', help="chromsome")
 @click.option('--output', help="output name")
 @click.option('--rerun', help='Whether to overwrite cached files', default=False)
 def query(dataset, chrom, output, rerun):
