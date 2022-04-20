@@ -7,18 +7,23 @@ from cpg_utils.hail import output_path
 
 @click.command()
 @click.option('--dataset', help="data to query")
-@click.pition('--chrom')
+@click.pition('--chrom', help="chromsome")
 @click.option('--output', help="output name")
 @click.option('--rerun', help='Whether to overwrite cached files', default=False)
 def query(dataset, chrom, output, rerun):
-
-    hl.init(default_reference='GRCh38')
-
     p_out = output_path(output)
+    log_out = output_path(output + ".log")
+ 
+    hl.init(default_reference='GRCh38')
+    hl.context.warning("inited")
+    hl.copy_log(log_out)
+
     if rerun or not hl.hadoop_exists(p_out):
         mt = hl.read_matrix_table(dataset)
         # filter alleles
-        mt2 = mt.filter_rows((mt.locus.contig == chrom) & (mt.alleles.length() > 1))
+        mt = mt.filter_rows((mt.locus.contig == chrom) & (mt.alleles.length() > 1))
+        hl.context.warning("filter")
+        hl.copy_log(log_out)
         # filter further
         ab = mt.AD[1] / hl.sum(mt.AD)
         filter_condition = ((mt.GT.is_hom_ref() & (ab <= 0.1)) |
@@ -29,11 +34,15 @@ def query(dataset, chrom, output, rerun):
         mt3 = mt2.filter_rows((mt2.variant_qc.AC[0] != 0) & (mt2.variant_qc.AC[1] != 0) & (mt2.variant_qc.call_rate > 0.95))
 
         mt3_out = mt3.select_rows(mt3.rsid, mt3.qual, mt3.filters, mt3.info )
-
         mt3_out = mt3_out.select_entries(mt3_out.GT, mt3_out.DP, mt3_out.AD,  mt3_out.GQ )
+
+        hl.context.warning("done filter")
+        hl.copy_log(log_out)
+ 
         hl.export_vcf(mt3_out, p_out)
 
-    hl.copy_log(output_path(output + ".log"))
+    hl.context.warning("done")
+    hl.copy_log(log_out)
 
 
 if __name__ == "__main__":
