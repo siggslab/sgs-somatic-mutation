@@ -26,11 +26,11 @@ batch = hb.Batch(name='Dataproc batch', backend=service_backend)
 @click.option("--nworker", default=2, help="number of worker")
 @click.option("--worker", default=None, help="type of worker: e.g. 'n1-highmem-8'")
 def submit(script, jobname, time, nworker, worker):
-    # num_workers = nworker
-    # worker_machine_type = worker
     cluster = dataproc.setup_dataproc(
             batch,
             max_age=time,
+            num_workers=nworker,
+            worker_machine_type=worker,
             packages=['click', 'selenium'],
             init=['gs://cpg-reference/hail_dataproc/install_common.sh'],
             cluster_name='Dataproc cluster',

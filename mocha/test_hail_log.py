@@ -16,21 +16,19 @@ def query(dataset, output, rerun):
     #sys.stdout = open(logfile, 'w')
     #sys.stderr = sys.stdout
 
-    print("init")
     hl.init(default_reference='GRCh38')
 
     sample_qc_path1 = output_path(output)
     if rerun or not hl.hadoop_exists(sample_qc_path1):
-        print("read")
         mt = hl.read_matrix_table(dataset)
         #print(mt.count())
         mt1 = mt.head(10)
         #print(mt1.count())
         mt_qc = hl.sample_qc(mt1)
         mt_qc.write(sample_qc_path1)
-        print("done")
-    hl.utils.copy_log("gs://cpg-sgs-somatic-mtn-test/z_qiao-dataproc/direct.log")
-    hl.utils.copy_log(output_path(output + ".log"))
+    # same
+    #hl.copy_log("gs://cpg-sgs-somatic-mtn-test/z_qiao-dataproc/direct.log")
+    hl.copy_log(output_path(output + ".log"))
 
 if __name__ == "__main__":
     query()
