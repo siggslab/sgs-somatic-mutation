@@ -38,7 +38,7 @@ def makeBatch():
 @click.option("--mem", default='4Gi', help='Memory')
 @click.option("--disk", default="10Gi", help="disk size")
 @click.option("--mount", default="", help="mount")
-@click.option("--readonly", default=True, help="mount read only"
+@click.option("--readonly", default=True, help="mount read only")
 def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
     batch = makeBatch()
     j = batch.new_job(jobname)
