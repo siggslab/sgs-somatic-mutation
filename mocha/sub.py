@@ -53,16 +53,18 @@ def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
         j.timeout(time)
 
     if mount != "":
-        mounts = mount.split()
-        if len(mounts) != 2:
-            print("error of mount")
-        else:
-            j.cloudfuse(mounts[0], mounts[1], read_only=readonly)
+        mounts = mount.split(";")
+        for mItem in mounts:
+            mItems = mItem.split("=>")
+            mItems = [x.strip() for x in mItems]
+            if(len(mItems) != 2):
+                continue
+            else:
+                j.cloudfuse(mItems[0], mItems[1], read_only=readonly)
 
     batch.write_output(j.output_log, output_path(jobname + ".log"))
 
     batch.run(wait=False)
-
     
 
 if __name__ == '__main__':
