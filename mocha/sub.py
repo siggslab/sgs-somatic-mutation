@@ -71,13 +71,13 @@ def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
 
     batch.write_output(j.output_log, output_path(jobname + ".log"))
 
-    prepare_git_job(
-        job=j,
-        repo_name=get_repo_name_from_current_directory(),
-        commit=get_git_commit_ref_of_current_repository()
-    )
-
     batch.run(wait=False)
+    #prepare_git_job(
+    #    job=j,
+    #    repo_name=get_repo_name_from_current_directory(),
+    #    commit=get_git_commit_ref_of_current_repository()
+    #)
+
     
 
 if __name__ == '__main__':
