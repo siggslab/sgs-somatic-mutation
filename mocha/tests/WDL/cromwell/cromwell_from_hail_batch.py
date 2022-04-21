@@ -26,7 +26,7 @@ workflow_outputs = run_cromwell_workflow_from_repo_and_get_outputs(
     b=b,
     job_prefix='hello',
     workflow='hello_all_in_one_file.wdl',
-    cwd='examples/cromwell',
+    cwd='mocha/tests/WDL/cromwell',
     input_dict={'hello.inps': inputs},
     outputs_to_collect={
         'joined_out': CromwellOutputType.single('hello.joined_out'),
