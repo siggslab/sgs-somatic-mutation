@@ -49,7 +49,6 @@ def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
     batch = makeBatch()
     j = batch.new_job(jobname)
 
-    j.command(f"{cmd} &> {j.output_log}")
     # set env
     if image != "":
         j.image(image)
@@ -69,15 +68,16 @@ def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
             else:
                 j.cloudfuse(mItems[0], mItems[1], read_only=readonly)
 
+
+    prepare_git_job(
+        job=j,
+        repo_name=get_repo_name_from_current_directory(),
+        commit=get_git_commit_ref_of_current_repository()
+    )
+
+    j.command(f"{cmd} &> {j.output_log}")
     batch.write_output(j.output_log, output_path(jobname + ".log"))
-
     batch.run(wait=False)
-    #prepare_git_job(
-    #    job=j,
-    #    repo_name=get_repo_name_from_current_directory(),
-    #    commit=get_git_commit_ref_of_current_repository()
-    #)
-
     
 
 if __name__ == '__main__':
