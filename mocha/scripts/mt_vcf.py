@@ -40,9 +40,15 @@ def query(dataset, chrom, output, rerun):
         hl.context.warning("done filter")
         hl.copy_log(log_out)
 
-        metadata = {'format': {'AD': {'Description':'',
-                              'Number':'R',
-                              'Type':'Integer'}}}
+        metadata = {'filter': {'InbreedingCoeff':{'Description':''},
+            'VQSR':{'Description':''},
+            'AC0':{'Description':''}, 
+            'PASS':{'Description':''}},
+
+            'format': {'AD': {'Description':'AD',
+                'Number':'R',
+                'Type':'Integer'}}
+            }
  
         hl.export_vcf(mt3_out, p_out, metadata=metadata)
 
