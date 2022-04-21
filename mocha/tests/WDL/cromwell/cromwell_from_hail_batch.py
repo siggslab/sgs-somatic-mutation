@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Test script, to demonstrate how you can run a cromwell workflow
 from within a batch environment, and operate on the result(s)
