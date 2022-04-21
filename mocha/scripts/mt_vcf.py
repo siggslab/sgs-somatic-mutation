@@ -35,11 +35,16 @@ def query(dataset, chrom, output, rerun):
 
         mt3_out = mt3.select_rows(mt3.rsid, mt3.qual, mt3.filters, mt3.info )
         mt3_out = mt3_out.select_entries(mt3_out.GT, mt3_out.DP, mt3_out.AD,  mt3_out.GQ )
+        mt3_out = mt3_out.annotate_rows(info = mt3_out.info.select("MQ"))
 
         hl.context.warning("done filter")
         hl.copy_log(log_out)
+
+        metadata = {'format': {'AD': {'Description':'',
+                              'Number':'R',
+                              'Type':'Integer'}}}
  
-        hl.export_vcf(mt3_out, p_out)
+        hl.export_vcf(mt3_out, p_out, metadata=metadata)
 
     hl.context.warning("done")
     hl.copy_log(log_out)
