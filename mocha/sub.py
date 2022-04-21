@@ -10,6 +10,12 @@ https://anaconda.org/cpg/analysis-runner
 from cpg_utils.hail import output_path
 from cpg_utils.hail import remote_tmpdir
 
+from analysis_runner.git import (
+  prepare_git_job,
+  get_repo_name_from_current_directory,
+  get_git_commit_ref_of_current_repository,
+)
+
 import hailtop.batch as hb
 
 import click
@@ -42,6 +48,15 @@ def makeBatch():
 def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
     batch = makeBatch()
     j = batch.new_job(jobname)
+
+    prepare_git_job(
+            job=j,
+            # you could specify a name here, like 'analysis-runner'
+            repo_name=get_repo_name_from_current_directory(),
+            # you could specify the specific commit here, eg: '1be7bb44de6182d834d9bbac6036b841f459a11a'
+            commit=get_git_commit_ref_of_current_repository(),
+            )
+
     j.command(f"{cmd} &> {j.output_log}")
     # set env
     if image != "":
