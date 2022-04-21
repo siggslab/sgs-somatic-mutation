@@ -55,7 +55,7 @@ def sub(cmd, jobname, time, image, cpu, mem, disk, mount, readonly):
             repo_name=get_repo_name_from_current_directory(),
             # you could specify the specific commit here, eg: '1be7bb44de6182d834d9bbac6036b841f459a11a'
             commit=get_git_commit_ref_of_current_repository(),
-            )
+    )
 
     j.command(f"{cmd} &> {j.output_log}")
     # set env
