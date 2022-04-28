@@ -7,7 +7,9 @@ task md5sum {
   }
 
   command {
+    echo "start ~{prefix}" 
     md5sum ~{in_file} > ~{prefix}.md5.txt
+    echo "done ~{prefix}" 
   }
 
   runtime {
@@ -18,5 +20,6 @@ task md5sum {
   }
   output {
     File out_file = "~{prefix}.md5.txt"
+    String out_str = read_string(stdout())
   }
 }

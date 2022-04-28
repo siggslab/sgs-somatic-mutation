@@ -14,5 +14,6 @@ workflow md5sum {
   }
   output {
     File md5_res = md5.out_file
+    String md5_str = md5.out_str
   }
 }
