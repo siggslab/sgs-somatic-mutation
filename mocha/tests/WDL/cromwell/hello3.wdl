@@ -33,7 +33,7 @@ workflow calMD5 {
 
     call md5 { 
         input:
-            inputFile = inputFile
+            inputFile = inputFile,
             prefix = prefix 
     }
 
