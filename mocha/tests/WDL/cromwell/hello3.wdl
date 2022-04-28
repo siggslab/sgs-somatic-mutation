@@ -8,7 +8,7 @@ task md5 {
 
     command {
         echo "start"
-        md5sum ~{inputFile} &> ~{prefix}.md5.txt
+        md5sum ~{inputFile} > ~{prefix}.md5.txt
         echo "done"
     }
 
