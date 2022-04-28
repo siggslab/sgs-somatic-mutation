@@ -31,11 +31,14 @@ workflow calMD5 {
         String prefix
     }
 
-    call md5 { input: inputFile=inputFile, prefix=prefix }
+    call md5 { 
+        input:
+            inputFile = inputFile
+            prefix = prefix 
+    }
 
     output {
         File out = md5.out_file
-        String out_s = md5.out_str
     }
 }
 
