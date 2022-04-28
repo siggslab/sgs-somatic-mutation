@@ -1,19 +1,5 @@
 version development
 
-workflow calMD5 {
-    input {
-        File inputFile
-        String prefix
-    }
-
-    call md5 { input: inputFile=inputFile, prefix=prefix }
-
-    output {
-        File out = md5.out_file
-        String out_s = md5.out_str
-    }
-}
-
 task md5 {
     input {
         File inputFile
@@ -38,3 +24,18 @@ task md5 {
         String out_str = read_string(stdout())
     }
 }
+
+workflow calMD5 {
+    input {
+        File inputFile
+        String prefix
+    }
+
+    call md5 { input: inputFile=inputFile, prefix=prefix }
+
+    output {
+        File out = md5.out_file
+        String out_s = md5.out_str
+    }
+}
+
