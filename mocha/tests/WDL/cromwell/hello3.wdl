@@ -1,4 +1,4 @@
-version 1.0
+version development
 
 workflow calMD5 {
     input {
