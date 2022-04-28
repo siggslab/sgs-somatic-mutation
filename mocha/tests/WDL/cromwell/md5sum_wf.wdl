@@ -2,7 +2,7 @@ version development
 
 import "tools/md5sum.wdl" as M
 
-workflow md5sum {
+workflow md5Sum {
   input {
     File inpf
     String prefix
