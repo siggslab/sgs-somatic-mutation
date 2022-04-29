@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Submit program to CPG
-Suggested programmed by zzl<zzl09yan@gmail.com>
+Submit job to CPG
+Suggested and programmed by zhili<zhilizheng@outlook.com>
+Tested and run by Zhenqiao
 License: MIT
 Please read the document from analysis-runner
 https://anaconda.org/cpg/analysis-runner
 """
 
-from cpg_utils.hail import output_path
-from cpg_utils.hail import remote_tmpdir
+from cpg_utils.hail_batch import output_path
+from cpg_utils.hail_batch import remote_tmpdir
 
 from analysis_runner.git import (
   prepare_git_job,

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-submit to dataproc
-Suggested programmed by zzl<zzl09yan@gmail.com>
+submit job by dataproc
+Suggested and programmed by Zhili<zhilizheng@outlook.com>
+Tested by Zhen Qiao
 License: MIT
 Please read the document from analysis-runner
 https://anaconda.org/cpg/analysis-runner
@@ -9,7 +10,7 @@ https://anaconda.org/cpg/analysis-runner
 
 import os
 import hailtop.batch as hb
-from cpg_utils.hail import remote_tmpdir
+from cpg_utils.hail_batch import remote_tmpdir
 from analysis_runner import dataproc
 import click
 
