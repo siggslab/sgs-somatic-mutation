@@ -33,9 +33,8 @@ def query(dataset, chrom, output, rerun):
 
         mt3 = mt2.filter_rows((mt2.variant_qc.AC[0] != 0) & (mt2.variant_qc.AC[1] != 0) & (mt2.variant_qc.call_rate >= 0.97) )
 
-        mt3_out = mt3.select_rows(mt3.rsid, mt3.qual, mt3.filters, mt3.info )
+        mt3_out = mt3.select_rows(mt3.rsid, mt3.qual, mt3.filters)
         mt3_out = mt3_out.select_entries(mt3_out.GT, mt3_out.DP, mt3_out.AD,  mt3_out.GQ )
-        mt3_out = mt3_out.annotate_rows(info = mt3_out.info.select("MQ"))
 
         mt3_out = hl.sample_qc(mt3_out)
         mt3_out = mt3_out.filter_cols(mt3_out.sample_qc.call_rate >= 0.97)
