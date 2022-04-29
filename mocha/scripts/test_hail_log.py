@@ -4,7 +4,7 @@ import click
 import hail as hl
 import sys
 
-from cpg_utils.hail import output_path
+from cpg_utils.hail_batch import output_path
 
 @click.command()
 @click.option('--dataset', help="data to query")
