@@ -20,7 +20,7 @@ task md5 {
     }
 
     output {
-        File out_file = "~{prefix2}.md5.txt"
+        File out_file = "~{prefix}.md5.txt"
         String out_str = read_string(stdout())
     }
 }
@@ -31,11 +31,7 @@ workflow calMD5 {
         String prefix
     }
 
-    call md5 { 
-        input:
-            inputFile = inputFile,
-            prefix = prefix 
-    }
+    call md5 { input: inputFile = inputFile,prefix = prefix }
 
     output {
         File out = md5.out_file
