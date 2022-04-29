@@ -2,13 +2,13 @@ version development
 
 task md5 {
     input {
-        File input_File
-        String prefix2
+        File inputFile
+        String prefix
     }
 
     command {
         echo "start"
-        md5sum ~{input_File} > ~{prefix2}.md5.txt
+        md5sum ~{inputFile} > ~{prefix}.md5.txt
         echo "done"
     }
 
@@ -33,8 +33,8 @@ workflow calMD5 {
 
     call md5 { 
         input:
-            input_File = inputFile,
-            prefix2 = prefix 
+            inputFile = inputFile,
+            prefix = prefix 
     }
 
     output {
