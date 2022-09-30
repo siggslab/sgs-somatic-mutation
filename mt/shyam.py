@@ -25,6 +25,7 @@ def plot_call_rate(mt):
     ax.set_ylabel('Variants')
     ax.set_xlabel('Call Rate')
     plt.show()
+    plt.savefig('mt_to_vcf_chr22_test.png')
     
 # Subset mt to chr22
 mt = hl.read_matrix_table(TOB_test_data)
