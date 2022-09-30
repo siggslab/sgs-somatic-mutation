@@ -12,7 +12,9 @@ TOB_test_data = "gs://cpg-tob-wgs-test/mt/v7.mt"
 
 def plot_call_rate(mt):
     """Test script entry point."""
-          
+    
+    figure_path = output_path('mt_to_vcf_chr22_test.png')
+      
     percents = [0.0, 0.5, 0.8, 1]
     callrates = []
     for per in percents:
@@ -25,7 +27,7 @@ def plot_call_rate(mt):
     ax.set_ylabel('Variants')
     ax.set_xlabel('Call Rate')
     plt.show()
-    plt.savefig('mt_to_vcf_chr22_test.png')
+    plt.savefig(figure_path)
     
 # Subset mt to chr22
 mt = hl.read_matrix_table(TOB_test_data)
