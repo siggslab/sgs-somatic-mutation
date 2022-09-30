@@ -10,24 +10,25 @@ TOB_test_data = "gs://cpg-tob-wgs-test/mt/v7.mt"
 @click.command()
 @click.option('--rerun', help='Whether to overwrite cached files', default=False)
 
-def plot_call_rate(mt):
+def plot_call_rate(rerun):
     """Test script entry point."""
     
     figure_path = output_path('mt_to_vcf_chr22_test.png')
-      
-    percents = [0.0, 0.5, 0.8, 1]
-    callrates = []
-    for per in percents:
-        callrate_mt = mt.filter_rows(mt.variant_qc.call_rate >= per)
-        callrates.append(callrate_mt.count_rows())
+    
+    if rerun or not hl.hadoop_exists(figure_path):  
+       percents = [0.0, 0.5, 0.8, 1]
+       callrates = []
+       for per in percents:
+           callrate_mt = mt.filter_rows(mt.variant_qc.call_rate >= per)
+           callrates.append(callrate_mt.count_rows())
 
-    fig = plt.figure()
-    ax = fig.add_axes([0,0,1,1])
-    ax.bar(percents, callrates)
-    ax.set_ylabel('Variants')
-    ax.set_xlabel('Call Rate')
-    plt.show()
-    plt.savefig(figure_path)
+       fig = plt.figure()
+       ax = fig.add_axes([0,0,1,1])
+       ax.bar(percents, callrates)
+       ax.set_ylabel('Variants')
+       ax.set_xlabel('Call Rate')
+       plt.show()
+       plt.savefig(figure_path)
     
 # Subset mt to chr22
 mt = hl.read_matrix_table(TOB_test_data)
