@@ -1,10 +1,13 @@
-import click
+import hail as hl
+import matplotlib.pyplot as plt
+from bokeh.io.export import get_screenshot_as_png
+from cpg_utils.hail import output_path
 
-@click.command()
-@click.option('--name', help='name') 
+def test ():
+    out = output_path('test.txt')
 
-def main(name):
-    print("test: " + name)
+    with open(out, 'w') as f:
+        f.write('readme')
 
 if __name__ == "__main__":
-    main()
+    test()
