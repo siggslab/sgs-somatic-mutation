@@ -4,7 +4,7 @@ from bokeh.io.export import get_screenshot_as_png
 from cpg_utils.hail import output_path
 
 def test ():
-    out = output_path('test.txt')
+    out = output_path('gs://cpg-sgs-somatic-mtn-test/test.txt')
 
     with open(out, 'w') as f:
         f.write('readme')
