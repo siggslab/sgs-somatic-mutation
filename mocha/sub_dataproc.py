@@ -10,12 +10,14 @@ https://anaconda.org/cpg/analysis-runner
 
 import os
 import hailtop.batch as hb
-from cpg_utils.hail_batch import remote_tmpdir
+from cpg_utils.hail_batch import get_config, remote_tmpdir
 from analysis_runner import dataproc
 import click
 
+config = get_config()
+
 service_backend = hb.ServiceBackend(
-    billing_project=os.getenv('HAIL_BILLING_PROJECT'), remote_tmpdir=remote_tmpdir()
+    billing_project=config['hail']['billing_project'], remote_tmpdir=remote_tmpdir()
 )
 
 batch = hb.Batch(name='Dataproc batch', backend=service_backend)
