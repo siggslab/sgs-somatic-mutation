@@ -10,16 +10,9 @@ https://anaconda.org/cpg/analysis-runner
 
 import os
 import hailtop.batch as hb
+from cpg_utils.hail_batch import get_config, remote_tmpdir
 from analysis_runner import dataproc
 import click
-from cpg_utils.config import get_config
-
-from cpg_utils.hail_batch import (
-    authenticate_cloud_credentials_in_job,
-    copy_common_env,
-    remote_tmpdir,
-    output_path
-)
 
 config = get_config()
 
