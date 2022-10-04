@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import bokeh
 import hail as hl
 import matplotlib.pyplot as plt
 from bokeh.plotting import figure
