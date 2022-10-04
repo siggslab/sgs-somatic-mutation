@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from bokeh.io.export import get_screenshot_as_png
 from cpg_utils.hail_batch import output_path, init_batch, output_path
 
-def call_rate_plot(dataset):   
+def call_rate_plot():   
     init_batch()
    
     dataset = "gs://cpg-tob-wgs-test/mt/v7.mt" 
