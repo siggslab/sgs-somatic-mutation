@@ -2,9 +2,8 @@
 
 import os
 import hailtop.batch as hb
-from cpg_utils.hail_batch import get_config, remote_tmpdir
 from analysis_runner import dataproc
-
+from cpg_utils.config import get_config
 from cpg_utils.hail_batch import (
     authenticate_cloud_credentials_in_job,
     copy_common_env,
