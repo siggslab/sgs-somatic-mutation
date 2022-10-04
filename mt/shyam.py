@@ -45,7 +45,7 @@ def plot_call_rate2(mt):
 @click.option('--chrom', help="chromsome")
 @click.option('--output', help="output name")
 @click.option('--rerun', help='Whether to overwrite cached files', default=False)
-def query(dataset, chrom, output, rerun):    
+def query(dataset):    
     p_out = output_path(output)
     log_out = ouptut_path(output + ".log")
     
