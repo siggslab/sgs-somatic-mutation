@@ -2,7 +2,8 @@
 
 import hail as hl
 import matplotlib.pyplot as plt
-import bokeh.plotting.figure as bk_figure
+from bokeh.plotting import figure
+from bokeh.io import show
 from bokeh.io.export import get_screenshot_as_png
 from cpg_utils.hail_batch import output_path, init_batch, output_path
 
@@ -24,7 +25,7 @@ def call_rate_plot():
     for per in percents:
         callrate_mt = mt.filter_rows(mt.variant_qc.call_rate >= per)
         callrates.append(callrate_mt.count_rows())
-    p = bk.figure(...)
+    p = bokeh.plotting.figure(...)
     fig = plt.figure()
     ax = fig.add_axes([0,0,1,1])
     ax.bar(percents, callrates)
