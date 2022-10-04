@@ -8,7 +8,7 @@ from cpg_utils.hail_batch import output_path, init_batch, output_path
 def call_rate_plot():   
     init_batch()
    
-    dataset = "gs://cpg-tob-wgs-test/mt/v7.mt" 
+    dataset = 'gs://cpg-tob-wgs-test/mt/v7.mt'
     mt = hl.read_matrix_table(dataset)
     mt = hl.filter_intervals(
          mt, 
@@ -28,7 +28,8 @@ def call_rate_plot():
     ax.bar(percents, callrates)
     ax.set_ylabel('Variants')
     ax.set_xlabel('Call Rate')
-#    plt.savefig('save_mt_call_rate_test.png')
+    plt.show()
+    plt.savefig('save_mt_call_rate_test.png')
     figure_filename = output_path('mt_call_rate_test.png', 'web')
     with hl.hadoop_open(figure_filename, 'wb') as f:
         get_screenshot_as_png(fig).save(f, format='PNG')
