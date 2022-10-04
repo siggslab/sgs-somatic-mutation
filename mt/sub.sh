@@ -14,3 +14,7 @@ analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$ou
     --script "shyam.py --dataset '$input'" \
     --jobname convert22
 
+analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "pVCF test" sub_dataproc.py \
+    --script "shyam.py --dataset '$input' --output test_pVCF.vcf.bgz" \
+    --jobname convert22
+
