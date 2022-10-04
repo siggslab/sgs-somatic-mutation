@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 from bokeh.io.export import get_screenshot_as_png
 from cpg_utils.hail_batch import output_path, init_batch, output_path
 
+@click.command()
+@click.option('--dataset', help="data to query")
 def call_rate_plot(dataset):   
     init_batch()
-   
-    dataset = "gs://cpg-tob-wgs-test/mt/v7.mt" 
+    
     mt = hl.read_matrix_table(dataset)
     mt = hl.filter_intervals(
          mt, 
