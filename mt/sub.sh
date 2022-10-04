@@ -10,8 +10,7 @@ main.py
 # export pVCF
 input="gs://cpg-tob-wgs-test/mt/v7.mt"
 outputDir="mt-call-rate-test"
-chr=22
 analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "mt call rate test on chr22" sub_dataproc.py \
-    --script "shyam.py --dataset '$input' --chrom chr${chr}" \
-    --jobname convert$chr
+    --script "shyam.py --dataset '$input'" \
+    --jobname convert22
 
