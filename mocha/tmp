@@ -1,6 +1,0 @@
-#### run export pVCF
-input="gs://cpg-tob-wgs-test/mt/v7.mt"
-outputDir="call_rate_figures"
-analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "Call rate test" sub_dataproc.py \
-    --script "tests/shyam.py --dataset '$input'" \
-    --jobname convert_test
