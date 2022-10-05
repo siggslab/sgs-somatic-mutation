@@ -13,7 +13,7 @@ input="gs://cpg-tob-wgs-test/mt/v7.mt"
 outputDir="mt-call-rate-test"
 chr=22
 analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "test" sub_dataproc.py \
-    --script "scripts/mt_vcf2.py --dataset '$input' --chrom chr${chr} --output CheckCheck_chr${chr}.vcf.bgz" \
+    --script "scripts/mt_vcf2.py --dataset '$input' --chrom chr${chr} --output Check_chr${chr}.mt" \
     --jobname convert$chr
 
 

@@ -33,9 +33,9 @@ def query(dataset, chrom, output, rerun):
             callrate_mt = mt.filter_rows(mt.variant_qc.call_rate >= per)
             callrates.append(callrate_mt.count_rows())
         
-        print("call rates: ", callrates)
+        print(f'Unpacked call rate list: {*callrates,}')
 
-        hl.context.warning("filter")
+        hl.context.warning("Calculation")
         hl.copy_log(log_out)
 
     hl.context.warning("done")
