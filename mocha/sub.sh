@@ -10,10 +10,12 @@ analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$ou
 
 #### run export pVCF
 input="gs://cpg-tob-wgs-test/mt/v7.mt"
-outputDir=""
-analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "Call rate test" sub_dataproc.py \
-    --script "tests/shyam.py --dataset '$input'" \
-    --jobname convert_test
+outputDir="mt-call-rate-test"
+chr=22
+analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "test" sub_dataproc.py \
+    --script "scripts/mt_vcf2.py --dataset '$input' --chrom chr${chr} --output CheckCheck_chr${chr}.vcf.bgz" \
+    --jobname convert$chr
+
 
 #### run export pVCF
 input="gs://cpg-tob-wgs-test/mt/v7.mt"
