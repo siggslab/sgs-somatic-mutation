@@ -6,7 +6,6 @@ import pandas as pd
 from cpg_utils.hail_batch import output_path, init_batch, output_path, reference_path
 from cloudpathlib import AnyPath
 
-dataset = 'gs://cpg-tob-wgs-test/mt/v7.mt'
 
 @click.command()
 @click.option('--dataset', help="data to query")
@@ -19,7 +18,8 @@ def main():
  
     # define output filename
     output_filename = AnyPath(output_path('call_rate_figure_data.csv'))
-    
+
+    dataset = 'gs://cpg-tob-wgs-test/mt/v7.mt'    
     mt = hl.read_matrix_table(dataset)
     mt = hl.filter_intervals(
          mt, 
