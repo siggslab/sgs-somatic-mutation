@@ -13,14 +13,12 @@ from cpg_utils.hail_batch import output_path
 @click.option('--output', help="output name")
 @click.option('--rerun', help='Whether to overwrite cached files', default=False)
 def query(dataset, chrom, output, rerun):
-    p_out = output_path(output)
-    log_out = output_path(output + ".log")
+    output_filename = AnyPath(output_path(output))
  
     hl.init(default_reference='GRCh38')
     hl.context.warning("inited")
-    hl.copy_log(log_out)
 
-    if rerun or not hl.hadoop_exists(p_out):
+    if rerun or not hl.hadoop_exists(output_filename):
         mt = hl.read_matrix_table(dataset)
         mt = mt.filter_rows((mt.locus.contig == chrom) & (mt.alleles.length() > 1))
         
@@ -44,8 +42,6 @@ def query(dataset, chrom, output, rerun):
             df.to_csv(of, index=False)
         
     hl.context.warning("done")
-    hl.copy_log(log_out)
-
 
 if __name__ == "__main__":
     query()
