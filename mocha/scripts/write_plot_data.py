@@ -8,13 +8,7 @@ from cloudpathlib import AnyPath
 
 dataset = dataset_path('mt/v7.mt')
 
-@click.command()
-@click.option('--dataset', help="data to query")
-@click.option('--chrom', help="chromsome")
-@click.option('--output', help="output name")
-@click.option('--rerun', help='Whether to overwrite cached files', default=False)
 def main():
-    
     init_batch()
  
     # define output filename
