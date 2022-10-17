@@ -30,4 +30,3 @@ analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "pVC
 --mount "cpg-sgs-somatic-mtn-test => /data; cpg-sgs-somatic-mtn-test-upload => /ref" \
 --readonly false \
 --jobname GC$chrom
-
