@@ -15,7 +15,7 @@ import collections
 @click.command()
 @click.option('--dataset', help="data to query")
 @click.option('--output', help="output name")
-@click.option('--rerun', help='Whether to overwrite cached files', default=False)
+@click.option('--rerun', is_flag=True, help='Whether to overwrite cached files', default=False)
 def query(dataset, output, rerun):
     p_out = output_path(output)
     log_out = output_path(output + ".log")
