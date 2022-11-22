@@ -30,10 +30,12 @@ def makeBatch():
     make the batch backend
     """
     # Initializing Batch
+    config = get_config()
     backend = hb.ServiceBackend(
-        billing_project=BILLING_PROJECT, remote_tmpdir=remote_tmpdir()
+        billing_project=config['hail']['billing_project'],
+        remote_tmpdir=remote_tmpdir(),
     )
-    return hb.Batch(backend=backend, default_image=os.getenv('DRIVER_IMAGE'))
+    return hb.Batch(backend=backend, default_image=config['workflow']['driver_image'])
 
 
 @click.command()
