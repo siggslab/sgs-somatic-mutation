@@ -15,13 +15,13 @@ import collections
 @click.option("--dataset", help="data to query")
 @click.option("--chrom", help="chromsome")
 @click.option("--cohort-size", help="sample size used to define the AF threshold")
+@click.option("--gnomAD-file", help="annotate variants with pop AF")
 @click.option(
     "--repeat-region-file", help="simple repeat regions needed to be excluded"
 )
-@click.option("--gnomAD-file", help="annotate variants with pop AF")
 @click.option("--output", help="output name")
 @click.option("--rerun", help="Whether to overwrite cached files", default=False)
-def main(dataset, chrom, cohort_size, repeat_region_file, gnomAD_file, output, rerun):
+def main(dataset, chrom, cohort_size, gnomAD_file, repeat_region_file, output, rerun):
     p_out = output_path(output)
     log_out = output_path(output + ".log")
 
