@@ -9,13 +9,15 @@ from pandas import Series, DataFrame
 import numpy as np
 import math
 import collections
- 
+
 
 @click.command()
 @click.option("--dataset", help="data to query")
 @click.option("--chrom", help="chromsome")
 @click.option("--cohort-size", help="sample size used to define the AF threshold")
-@click.option("--repeat-region-file", help="simple repeat regions needed to be excluded")
+@click.option(
+    "--repeat-region-file", help="simple repeat regions needed to be excluded"
+)
 @click.option("--gnomAD-file", help="annotate variants with pop AF")
 @click.option("--output", help="output name")
 @click.option("--rerun", help="Whether to overwrite cached files", default=False)
@@ -35,7 +37,7 @@ def main(dataset, chrom, cohort_size, repeat_region_file, gnomAD_file, output, r
         mt = hl.experimental.densify(mt)
         mt = hl.variant_qc(mt)
 
-        #  Step 2 - Sample-level QC 
+        #  Step 2 - Sample-level QC
         mt = hl.sample_qc(mt)
 
         # Restricted to samples with imputed sex == XX (female) or XY (male)
@@ -72,7 +74,7 @@ def main(dataset, chrom, cohort_size, repeat_region_file, gnomAD_file, output, r
                 & (mt["allele_type"] == "ins")
                 & (mt["AS_VQSLOD"] < mt["filtering_model"].indel_cutoff.min_score)
             )
-            | (hl.len(mt.alleles) != 2) 
+            | (hl.len(mt.alleles) != 2)
             | ((hl.len(mt.alleles) == 2) & (mt.n_unsplit_alleles != 2))
             | (hl.is_missing(mt["InbreedingCoeff"]))
             | ((hl.is_defined(mt["InbreedingCoeff"])) & (mt["InbreedingCoeff"] < -0.3))
@@ -83,7 +85,7 @@ def main(dataset, chrom, cohort_size, repeat_region_file, gnomAD_file, output, r
         filter_condition = (mt.DP >= 10) & (mt.GQ >= 20)
         mt = hl.variant_qc(mt.filter_entries(filter_condition, keep=True))
 
-        # Step 4 - deCODE specific filter 
+        # Step 4 - deCODE specific filter
 
         # Exclude variants with call rate < 0.99 (not in deCODE paper)
         mt = mt.filter_rows(mt.variant_qc.call_rate >= 0.99)
@@ -121,7 +123,7 @@ def main(dataset, chrom, cohort_size, repeat_region_file, gnomAD_file, output, r
             mt.filter_rows(hl.is_defined(interval_table[mt.locus]), keep=False)
         )
 
-        # Step 5 - Export to a pVCF file 
+        # Step 5 - Export to a pVCF file
         output = mt.select_rows(mt.rsid, mt.qual)
         output = output.select_entries(output.GT, output.DP, output.AD, output.GQ)
 
