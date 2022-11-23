@@ -1,4 +1,0 @@
-sub.py & sub_dataproc.py were written to simplify the process of submitting jobs using Hail Batch. 
-It enables submitting jobs with analysis-runner in a manner similar as submitting jobs on local cluster
-
-

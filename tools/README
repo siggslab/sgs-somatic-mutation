@@ -1,0 +1,5 @@
+`sub.py` is written to help beginners creating and executing jobs using Batch & analysis-runner.
+`sub_dataproc.py` is for jobs needed to invoke `hailctl dataproc`.
+
+Both of these scripts makes submitting jobs in a manner similar as submitting jobs on cluster.
+

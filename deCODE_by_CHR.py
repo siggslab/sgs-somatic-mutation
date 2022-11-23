@@ -15,13 +15,11 @@ import collections
 @click.option("--dataset", help="data to query")
 @click.option("--chrom", help="chromsome")
 @click.option("--cohort-size", help="sample size used to define the AF threshold")
-@click.option("--gnomAD-file", help="annotate variants with pop AF")
-@click.option(
-    "--repeat-region-file", help="simple repeat regions needed to be excluded"
-)
+@click.option("--gnomad-file", help="annotate variants with pop AF")
+@click.option("--regions-file", help="simple repeat regions needed to be excluded")
 @click.option("--output", help="output name")
 @click.option("--rerun", help="Whether to overwrite cached files", default=False)
-def main(dataset, chrom, cohort_size, gnomAD_file, repeat_region_file, output, rerun):
+def main(dataset, chrom, cohort_size, gnomad_file, regions_file, output, rerun):
     p_out = output_path(output)
     log_out = output_path(output + ".log")
 
@@ -31,16 +29,25 @@ def main(dataset, chrom, cohort_size, gnomAD_file, repeat_region_file, output, r
 
     if rerun or not hl.hadoop_exists(p_out):
 
-        # Step 1 - Read dataset
+        """
+        Step 1 - Read & Densify Dataset
+        """
         mt = hl.read_matrix_table(dataset)
         mt = mt.filter_rows(mt.locus.contig == chrom)
         mt = hl.experimental.densify(mt)
         mt = hl.variant_qc(mt)
 
-        #  Step 2 - Sample-level QC
+        """ 
+        Step 2 - Sample-level QC
+        1. Restricted to samples with imputed sex equals to XX (Female) or XY (Male)
+        2. Restricted to samples with call rate >= 0.99
+        3. Restricted to samples with mean coverage >= 20X
+        4. Excluded related samples
+        5. Skip ancestry check
+        """
         mt = hl.sample_qc(mt)
 
-        # Restricted to samples with imputed sex == XX (female) or XY (male)
+        # Restricted to samples with imputed sex == XX or XY
         # Sample-level call rate >= 0.99
         # mean coverage >= 20X
         filter_conditions = (
@@ -55,7 +62,9 @@ def main(dataset, chrom, cohort_size, gnomAD_file, repeat_region_file, output, r
 
         # Skip ancestry check
 
-        # Step 3 - Variant-level QC
+        """
+        Step 3 - Variant-level QC
+        """
 
         mt = hl.variant_qc(mt)
 
@@ -85,7 +94,9 @@ def main(dataset, chrom, cohort_size, gnomAD_file, repeat_region_file, output, r
         filter_condition = (mt.DP >= 10) & (mt.GQ >= 20)
         mt = hl.variant_qc(mt.filter_entries(filter_condition, keep=True))
 
-        # Step 4 - deCODE specific filter
+        """
+        Step 4 - deCODE specific filter
+        """
 
         # Exclude variants with call rate < 0.99 (not in deCODE paper)
         mt = mt.filter_rows(mt.variant_qc.call_rate >= 0.99)
@@ -123,7 +134,10 @@ def main(dataset, chrom, cohort_size, gnomAD_file, repeat_region_file, output, r
             mt.filter_rows(hl.is_defined(interval_table[mt.locus]), keep=False)
         )
 
-        # Step 5 - Export to a pVCF file
+        """
+        Step 5 - Export to a pVCF file
+        Select the following fields & export to a pVCF file
+        """
         output = mt.select_rows(mt.rsid, mt.qual)
         output = output.select_entries(output.GT, output.DP, output.AD, output.GQ)
 
