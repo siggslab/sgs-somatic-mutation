@@ -119,7 +119,7 @@ def main(dataset, chrom, cohort_size, gnomad_file, regions_file, output, rerun):
         mt = mt.filter_rows(mt.variant_qc.n_non_ref == 1)
 
         # Read gnomAD allele frequency
-        ref_ht = hl.read_table(gnomAD_file)
+        ref_ht = hl.read_table(gnomad_file)
 
         # Annotate variants with CADD scores, gnomAD etc.
         mt = mt.annotate_rows(
@@ -139,7 +139,7 @@ def main(dataset, chrom, cohort_size, gnomad_file, regions_file, output, rerun):
         # simple repeat regions - combining the entire Simple Tandem Repeats by TRF track in UCSC hg38 with all homopolymer regions in hg38 of length 6bp or more
 
         # Read the (Combined) Simple Repeat Regions
-        interval_table = hl.import_bed(repeat_region_file, reference_genome="GRCh38")
+        interval_table = hl.import_bed(regions_file, reference_genome="GRCh38")
 
         # Exclude mutations in these regions
         mt = hl.variant_qc(
