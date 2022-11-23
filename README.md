@@ -39,6 +39,14 @@ First perform QC on TOB's Hail MatrixTable data (following [gnomAD's blog](https
 
 ### How to run this script?
 
+```
+# Make sure that one have logged into GCP
+gcloud auth application-default login
+
+# activate the environment for running analysis-runner
+conda activate CPG
+```
+
 Example 1:
 ```
 input="gs://cpg-tob-wgs-test/mt/v7.mt"
@@ -49,7 +57,7 @@ cohort_size=11262
 simple_repeat_regions="gs://cpg-sgs-somatic-mtn-test-upload/Simple_Repeat_Regions_GRCh38_Excluded_Unmapped_Regions.bed"
 ref_ht="gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht"
 
-analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "deCODE" ./tools/sub_dataproc.py \
+analysis-runner --dataset sgs-somatic-mtn --access-level test  --output-dir "$outputDir" --description "deCODE" sub_dataproc.py \
     --script "deCODE_by_CHR.py --dataset '$input' --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file '${ref_ht}' --regions-file '${simple_repeat_regions}' --output '$output'" \
     --jobname deCODE_chr$chr
 ```
@@ -65,7 +73,7 @@ ref_ht="gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht"
 for chr in {{1..22},{'X','Y','M'}}
 do
 output="deCODE_chr${chr}.vcf.bgz"
-analysis-runner --dataset sgs-somatic-mtn --access-level main  --output-dir "$outputDir" --description "deCODE" ./tools/sub_dataproc.py \
+analysis-runner --dataset sgs-somatic-mtn --access-level main  --output-dir "$outputDir" --description "deCODE" sub_dataproc.py \
     --script "deCODE_by_CHR.py --dataset '$input' --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file '${ref_ht}' --regions-file '${simple_repeat_regions}' --output '$output'" \
     --jobname deCODE_chr${chr}
 done
