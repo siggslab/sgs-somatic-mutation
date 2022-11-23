@@ -64,12 +64,16 @@ def main(dataset, chrom, cohort_size, gnomad_file, regions_file, output, rerun):
 
         """
         Step 3 - Variant-level QC
+        1. Apply AS_VQSR cutoffs (different threshold for indels/snvs)
+        2. Restricted to bi-allelic variants
+        3. Exclude variants with inbreeding coeff < -0.3
+        4. Restricted to high quality variants (GQ>=20, DP>=10)
         """
 
         mt = hl.variant_qc(mt)
 
         # Apply AS_VQSR filters
-        # Restricted to bi-alleleic variants
+        # Restricted to bi-allelic variants
         # Exclude variants with inbreeding Coefficient < -0.3
         filter_conditions = (
             (hl.is_missing(mt["allele_type"]))
@@ -96,19 +100,25 @@ def main(dataset, chrom, cohort_size, gnomad_file, regions_file, output, rerun):
 
         """
         Step 4 - deCODE specific filter
+        1. Exclude variants with call rate < 0.99
+        2. Identify singleton mutations
+        3. Apply deCODE specific filter (DP >= 16, GQ >= 90, >=3 indepedent reads for alt allele, not in simple repeat regions, very low AF at population level[use deCODE sample size as a ref])
         """
 
         # Exclude variants with call rate < 0.99 (not in deCODE paper)
         mt = mt.filter_rows(mt.variant_qc.call_rate >= 0.99)
 
-        # Identify singleton mutations with filters
-        # sequence depth >= 16 & GQ >= 90
+        # Identify singleton mutations
+        mt = mt.filter_rows(mt.variant_qc.n_non_ref == 1)
+
+        # Apply strict filters to singleton mutations
+        # DP >= 16 & GQ >= 90
         # >=3 indepedent reads containing a variant allele required
         filter_condition = (mt.DP >= 16) & (mt.GQ >= 90) & (mt.AD[1] >= 3)
         mt = hl.variant_qc(mt.filter_entries(filter_condition, keep=True))
         mt = mt.filter_rows(mt.variant_qc.n_non_ref == 1)
 
-        # gnomAD allele frequency
+        # Read gnomAD allele frequency
         ref_ht = hl.read_table(gnomAD_file)
 
         # Annotate variants with CADD scores, gnomAD etc.
@@ -118,18 +128,20 @@ def main(dataset, chrom, cohort_size, gnomad_file, regions_file, output, rerun):
             gnomad_genome_coverage=ref_ht[mt.row_key].gnomad_genome_coverage,
         )
 
+        # Delete gnomAD file to save space
         del ref_ht
 
-        # Apply gnomAD AF filter
+        # Apply gnomAD AF filter (very low MAF)
         AF_cutoff = 1 / (cohort_size * 2)
         mt = mt.filter_rows(mt.gnomad_genomes.AF_POPMAX_OR_GLOBAL <= AF_cutoff)
 
-        # Exclude variants in simple repeat regions
+        # Exclude mutations in simple repeat regions
         # simple repeat regions - combining the entire Simple Tandem Repeats by TRF track in UCSC hg38 with all homopolymer regions in hg38 of length 6bp or more
 
         # Read the (Combined) Simple Repeat Regions
         interval_table = hl.import_bed(repeat_region_file, reference_genome="GRCh38")
 
+        # Exclude mutations in these regions
         mt = hl.variant_qc(
             mt.filter_rows(hl.is_defined(interval_table[mt.locus]), keep=False)
         )
