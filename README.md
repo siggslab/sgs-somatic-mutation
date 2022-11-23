@@ -39,6 +39,14 @@ First perform QC on TOB's Hail MatrixTable data (following [gnomAD's blog](https
 
 ### How to run this script?
 
+```
+# Make sure that one have logged into GCP
+gcloud auth application-default login
+
+# activate the environment for running analysis-runner
+conda activate CPG
+```
+
 Example 1:
 ```
 input="gs://cpg-tob-wgs-test/mt/v7.mt"
