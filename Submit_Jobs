@@ -14,7 +14,7 @@ ref_ht="gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht"
 
 
 analysis-runner --dataset "sgs-somatic-mtn" \
-    --access-level "standard" \
+    --access-level "test" \
     --output-dir "$outputDir" \
     --description "deCODE" \
     deCODE_by_CHR.py --dataset '$input' --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file '${ref_ht}' --regions-file '${simple_repeat_regions}' --output '$output'
