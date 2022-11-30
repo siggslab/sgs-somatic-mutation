@@ -21,16 +21,16 @@ logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 @click.command()
 @click.option("--dataset", help="data to query")
 @click.option("--chrom", help="chromsome")
-@click.option("--CohortSize", help="sample size used to define the AF threshold")
-@click.option("--GnomadFile", help="annotate variants with pop AF")
-@click.option("--RegionsFile", help="simple repeat regions needed to be excluded")
+@click.option("--cohortsize", help="sample size used to define the AF threshold")
+@click.option("--gnomadfile", help="annotate variants with pop AF")
+@click.option("--regionsfile", help="simple repeat regions needed to be excluded")
 @click.option("--output", help="output name")
 def main(
     dataset: str,
     chrom: str,
-    CohortSize: int,
-    GnomadFile: str,
-    RegionsFile: str,
+    cohortsize: int,
+    gnomadfile: str,
+    regionsfile: str,
     output: str,
 ):
     init_batch()
@@ -138,14 +138,14 @@ def main(
     del ref_ht
 
     # Apply gnomAD AF filter (very low MAF)
-    AF_cutoff = 1 / (int(CohortSize) * 2)
+    AF_cutoff = 1 / (int(cohortsize) * 2)
     mt = mt.filter_rows(mt.gnomad_genomes.AF_POPMAX_OR_GLOBAL <= AF_cutoff)
 
     # Exclude mutations in simple repeat regions
     # simple repeat regions - combining the entire Simple Tandem Repeats by TRF track in UCSC hg38 with all homopolymer regions in hg38 of length 6bp or more
 
     # Read the (Combined) Simple Repeat Regions
-    interval_table = hl.import_bed(RegionsFile, reference_genome="GRCh38")
+    interval_table = hl.import_bed(regionsfile, reference_genome="GRCh38")
 
     # Exclude mutations in these regions
     mt = hl.variant_qc(
