@@ -12,14 +12,14 @@ from cpg_utils.hail_batch import dataset_path, output_path, init_batch, remote_t
 
 
 @click.command()
-@click.option("--dataset")
+@click.option("--mt-path")
 @click.option("--chrom")
 @click.option("--cohort-size", help="sample size used to decide the AF threshold")
 @click.option("--gnomad-file", help="annotate variants with pop AF from gnomAD")
 @click.option("--regions-file", help="simple repeat regions needed to be excluded")
 @click.option("--output")
 def main(
-    dataset: str,
+    mt_path: str,
     chrom: str,
     cohort_size: int,
     gnomad_file: str,
@@ -27,6 +27,8 @@ def main(
     output: str,
 ):
     init_batch()
+
+    dataset=dataset_path(mt_path, dataset='tob-wgs')
 
     """
     Step 1 - Read & Densify mt dataset
