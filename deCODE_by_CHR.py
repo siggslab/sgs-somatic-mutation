@@ -38,7 +38,6 @@ def main(
     """
     Step 1 - Read & Densify Dataset
     """
-    dataset = dataset_path(dataset)
     mt = hl.read_matrix_table(dataset)
     mt = mt.filter_rows(mt.locus.contig == chrom)
     mt = hl.experimental.densify(mt)
