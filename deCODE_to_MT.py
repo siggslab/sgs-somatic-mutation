@@ -157,19 +157,6 @@ def main(
     file_out = output_path(output_mt)
     mt.write(file_out, overwrite=True)
 
-#   Export to pVCF 
-#    metadata = {
-#        "filter": {
-#            "InbreedingCoeff": {"Description": ""},
-#            "VQSR": {"Description": ""},
-#            "AC0": {"Description": ""},
-#            "PASS": {"Description": ""},
-#        },
-#        "format": {"AD": {"Description": "AD", "Number": "R", "Type": "Integer"}},
-#    }
-#    file_out = output_path(output)
-#    hl.export_vcf(mt, file_out, metadata=metadata)
-
 
 if __name__ == "__main__":
     main()
