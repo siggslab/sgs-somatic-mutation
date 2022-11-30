@@ -7,7 +7,7 @@ This script is written to find singleton mutations in TOB
 
 import logging
 import click
-import hail as hl 
+import hail as hl
 from cloudpathlib import AnyPath
 
 from cpg_utils.config import get_config
@@ -15,22 +15,22 @@ from cpg_utils.hail_batch import dataset_path, output_path, init_batch, remote_t
 
 
 # use logging to print statements, display at info level
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 
 @click.command()
 @click.option("--dataset", help="data to query")
 @click.option("--chrom", help="chromsome")
-@click.option("--cohort-size", help="sample size used to define the AF threshold")
-@click.option("--gnomad-file", help="annotate variants with pop AF")
-@click.option("--regions-file", help="simple repeat regions needed to be excluded")
+@click.option("--CohortSize", help="sample size used to define the AF threshold")
+@click.option("--GnomadFile", help="annotate variants with pop AF")
+@click.option("--RegionsFile", help="simple repeat regions needed to be excluded")
 @click.option("--output", help="output name")
 def main(
-    dataset: str, 
-    chrom: str, 
-    cohort_size: int, 
-    gnomad_file: str, 
-    regions_file: str, 
+    dataset: str,
+    chrom: str,
+    CohortSize: int,
+    GnomadFile: str,
+    RegionsFile: str,
     output: str,
 ):
     init_batch()
@@ -41,7 +41,7 @@ def main(
     mt = hl.read_matrix_table(dataset)
     mt = mt.filter_rows(mt.locus.contig == chrom)
     mt = hl.experimental.densify(mt)
-    mt = hl.variant_qc(mt)   
+    mt = hl.variant_qc(mt)
 
     """
     Step 2 - Sample-level QC
@@ -125,7 +125,7 @@ def main(
     mt = mt.filter_rows(mt.variant_qc.n_non_ref == 1)
 
     # Read gnomAD allele frequency
-    ref_ht = hl.read_table(gnomad_file)
+    ref_ht = hl.read_table(GnomadFile)
 
     # Annotate variants with CADD scores, gnomAD etc.
     mt = mt.annotate_rows(
@@ -138,14 +138,14 @@ def main(
     del ref_ht
 
     # Apply gnomAD AF filter (very low MAF)
-    AF_cutoff = 1 / (int(cohort_size) * 2)
+    AF_cutoff = 1 / (int(CohortSize) * 2)
     mt = mt.filter_rows(mt.gnomad_genomes.AF_POPMAX_OR_GLOBAL <= AF_cutoff)
 
     # Exclude mutations in simple repeat regions
     # simple repeat regions - combining the entire Simple Tandem Repeats by TRF track in UCSC hg38 with all homopolymer regions in hg38 of length 6bp or more
 
     # Read the (Combined) Simple Repeat Regions
-    interval_table = hl.import_bed(regions_file, reference_genome="GRCh38")
+    interval_table = hl.import_bed(RegionsFile, reference_genome="GRCh38")
 
     # Exclude mutations in these regions
     mt = hl.variant_qc(
@@ -155,7 +155,7 @@ def main(
     """
     Step 5 - Export to a pVCF file
     Select the following fields & export to a pVCF file
-    """ 
+    """
     mt = mt.select_rows(mt.rsid, mt.qual)
     mt = mt.select_entries(mt.GT, mt.DP, mt.AD, mt.GQ)
 
@@ -168,9 +168,9 @@ def main(
         },
         "format": {"AD": {"Description": "AD", "Number": "R", "Type": "Integer"}},
     }
-    
-    file_out = output_path(output)   
-    hl.export_vcf(mt, file_out, metadata=metadata)    
+
+    file_out = output_path(output)
+    hl.export_vcf(mt, file_out, metadata=metadata)
 
 
 if __name__ == "__main__":
