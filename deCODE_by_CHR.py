@@ -125,7 +125,7 @@ def main(
     mt = mt.filter_rows(mt.variant_qc.n_non_ref == 1)
 
     # Read gnomAD allele frequency
-    ref_ht = hl.read_table(GnomadFile)
+    ref_ht = hl.read_table(gnomadfile)
 
     # Annotate variants with CADD scores, gnomAD etc.
     mt = mt.annotate_rows(
