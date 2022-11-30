@@ -55,7 +55,7 @@ analysis-runner --dataset sgs-somatic-mtn \
     --access-level test \
     --output-dir "deCODE" \
     --description "Test deCODE pipeline" \
-    python3 deCODE_by_CHR.py --dataset gs://cpg-tob-wgs-test/mt/v7.mt --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht --regions-file gs://cpg-sgs-somatic-mtn-test-upload/Simple_Repeat_Regions_GRCh38_Excluded_Unmapped_Regions.bed --output deCODE_test_chr${chr}.vcf.bgz
+    python3 deCODE_by_CHR.py --mt-path mt/v7.mt --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht --regions-file gs://cpg-sgs-somatic-mtn-test-upload/Simple_Repeat_Regions_GRCh38_Excluded_Unmapped_Regions.bed --output deCODE_test_chr${chr}.vcf.bgz
 ```    
 
 Example 2:
@@ -67,6 +67,19 @@ analysis-runner --dataset sgs-somatic-mtn \
     --access-level test \
     --output-dir "deCODE_pipeline" \
     --description "Test deCODE pipeline" \
-    python3 deCODE_by_CHR.py --dataset gs://cpg-tob-wgs-test/mt/v7.mt --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht --regions-file gs://cpg-sgs-somatic-mtn-test-upload/Simple_Repeat_Regions_GRCh38_Excluded_Unmapped_Regions.bed --output deCODE_pipeline_test_chr${chr}.vcf.bgz
+    python3 deCODE_by_CHR.py --mt-path mt/v7.mt --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht --regions-file gs://cpg-sgs-somatic-mtn-test-upload/Simple_Repeat_Regions_GRCh38_Excluded_Unmapped_Regions.bed --output deCODE_pipeline_test_chr${chr}.vcf.bgz
+done
+```
+
+Example 3:
+```
+cohort_size=11262
+for chr in {{1..22},{'X','Y','M'}}
+do
+analysis-runner --dataset sgs-somatic-mtn \
+    --access-level main \
+    --output-dir "deCODE_pipeline" \
+    --description "Submit deCODE pipeline through hail batch" \
+    python3 deCODE_by_CHR.py --mt-path mt/v7.mt --chrom chr${chr} --cohort-size ${cohort_size} --gnomad-file gs://cpg-reference/seqr/v0-1/combined_reference_data_grch38-2.0.4.ht --regions-file gs://cpg-sgs-somatic-mtn-test-upload/Simple_Repeat_Regions_GRCh38_Excluded_Unmapped_Regions.bed --output deCODE_pipeline_chr${chr}.vcf.bgz
 done
 ```
