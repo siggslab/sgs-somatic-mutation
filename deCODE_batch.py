@@ -26,9 +26,7 @@ from cpg_utils.hail_batch import (
 # use logging to print statements, display at info level
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
-CELLREGMAP_IMAGE = get_config()["workflow"][
-    "driver_image"
-]   australia-southeast1-docker.pkg.dev/cpg-common/images/cellregmap:0.0.3
+CELLREGMAP_IMAGE = "australia-southeast1-docker.pkg.dev/cpg-common/images/cellregmap:0.0.3"
 
 
 def deCODE_query(
