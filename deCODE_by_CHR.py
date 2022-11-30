@@ -1,42 +1,35 @@
 #!/usr/bin/env python3
 
-
 """
-This script is written to find singleton mutations in TOB
+This script is to find singleton mutations in TOB
 """
 
-import logging
 import click
 import hail as hl
-from cloudpathlib import AnyPath
 
 from cpg_utils.config import get_config
 from cpg_utils.hail_batch import dataset_path, output_path, init_batch, remote_tmpdir
 
 
-# use logging to print statements, display at info level
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
-
-
 @click.command()
-@click.option("--dataset", help="data to query")
-@click.option("--chrom", help="chromsome")
-@click.option("--cohortsize", help="sample size used to define the AF threshold")
-@click.option("--gnomadfile", help="annotate variants with pop AF")
-@click.option("--regionsfile", help="simple repeat regions needed to be excluded")
-@click.option("--output", help="output name")
+@click.option("--dataset")
+@click.option("--chrom")
+@click.option("--cohort-size", help="sample size used to decide the AF threshold")
+@click.option("--gnomad-file", help="annotate variants with pop AF from gnomAD")
+@click.option("--regions-file", help="simple repeat regions needed to be excluded")
+@click.option("--output")
 def main(
     dataset: str,
     chrom: str,
-    cohortsize: int,
-    gnomadfile: str,
-    regionsfile: str,
+    cohort_size: int,
+    gnomad_file: str,
+    regions_file: str,
     output: str,
 ):
     init_batch()
 
     """
-    Step 1 - Read & Densify Dataset
+    Step 1 - Read & Densify mt dataset
     """
     mt = hl.read_matrix_table(dataset)
     mt = mt.filter_rows(mt.locus.contig == chrom)
@@ -125,7 +118,7 @@ def main(
     mt = mt.filter_rows(mt.variant_qc.n_non_ref == 1)
 
     # Read gnomAD allele frequency
-    ref_ht = hl.read_table(gnomadfile)
+    ref_ht = hl.read_table(gnomad_file)
 
     # Annotate variants with CADD scores, gnomAD etc.
     mt = mt.annotate_rows(
@@ -138,14 +131,14 @@ def main(
     del ref_ht
 
     # Apply gnomAD AF filter (very low MAF)
-    AF_cutoff = 1 / (int(cohortsize) * 2)
+    AF_cutoff = 1 / (cohort_size * 2)
     mt = mt.filter_rows(mt.gnomad_genomes.AF_POPMAX_OR_GLOBAL <= AF_cutoff)
 
     # Exclude mutations in simple repeat regions
     # simple repeat regions - combining the entire Simple Tandem Repeats by TRF track in UCSC hg38 with all homopolymer regions in hg38 of length 6bp or more
 
     # Read the (Combined) Simple Repeat Regions
-    interval_table = hl.import_bed(regionsfile, reference_genome="GRCh38")
+    interval_table = hl.import_bed(regions_file, reference_genome="GRCh38")
 
     # Exclude mutations in these regions
     mt = hl.variant_qc(
