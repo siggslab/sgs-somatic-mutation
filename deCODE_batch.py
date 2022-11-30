@@ -28,7 +28,7 @@ logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
 CELLREGMAP_IMAGE = get_config()["workflow"][
     "driver_image"
-]  # australia-southeast1-docker.pkg.dev/cpg-common/images/cellregmap:0.0.3
+]   australia-southeast1-docker.pkg.dev/cpg-common/images/cellregmap:0.0.3
 
 
 def deCODE_query(
@@ -217,4 +217,4 @@ def deCODE_pipeline(
 
 
 if __name__ == "__main__":
-    deCODE_pipeline()
+   deCODE_pipeline()
