@@ -131,7 +131,7 @@ def main(
     del ref_ht
 
     # Apply gnomAD AF filter (very low MAF)
-    AF_cutoff = 1 / (cohort_size * 2)
+    AF_cutoff = 1 / (int(cohort_size) * 2)
     mt = mt.filter_rows(mt.gnomad_genomes.AF_POPMAX_OR_GLOBAL <= AF_cutoff)
 
     # Exclude mutations in simple repeat regions
