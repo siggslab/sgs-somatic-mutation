@@ -97,11 +97,8 @@ def main(
     mt = hl.variant_qc(mt)
     mt = mt.annotate_rows(InbreedingCoeff=bi_allelic_site_inbreeding_expr(mt.GT))
 
-    # Filter variants with InbreedingCoeff
-    filter_conditions = (hl.is_missing(mt["InbreedingCoeff"])) | (
-        (hl.is_defined(mt["InbreedingCoeff"])) & (mt["InbreedingCoeff"] < -0.3)
-    )
-    mt = mt.filter_rows(filter_conditions, keep=False)
+    # Filter variants with InbreedingCoeff (keep >= -0.3, exclude < -0.3)
+    mt = mt.filter_rows(mt.InbreedingCoeff >= -0.3, keep=True)
 
     # Restricted to high quality variants (GQ>=20, DP>=10)
     filter_condition = (mt.DP >= 10) & (mt.GQ >= 20)
