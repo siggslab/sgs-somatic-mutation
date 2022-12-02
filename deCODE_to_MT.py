@@ -9,6 +9,7 @@ import hail as hl
 
 from cpg_utils.config import get_config
 from cpg_utils.hail_batch import dataset_path, output_path, init_batch, remote_tmpdir
+from gnomad.utils.annotations import bi_allelic_site_inbreeding_expr
 
 
 @click.command()
@@ -28,7 +29,7 @@ def main(
 ):
     init_batch()
 
-    dataset=dataset_path(input_mt, dataset='tob-wgs')
+    dataset = dataset_path(input_mt, dataset="tob-wgs")
 
     """
     Step 1 - Read & Densify mt dataset
@@ -46,6 +47,7 @@ def main(
     4. Excluded related samples
     5. Skip ancestry check
     """
+
     mt = hl.sample_qc(mt)
 
     # Restricted to samples with imputed sex == XX or XY
@@ -71,11 +73,8 @@ def main(
     4. Restricted to high quality variants (GQ>=20, DP>=10)
     """
 
-    mt = hl.variant_qc(mt)
-
     # Apply AS_VQSR filters
     # Restricted to bi-allelic variants
-    # Exclude variants with inbreeding Coefficient < -0.3
     filter_conditions = (
         (hl.is_missing(mt["allele_type"]))
         | (
@@ -90,10 +89,16 @@ def main(
         )
         | (hl.len(mt.alleles) != 2)
         | ((hl.len(mt.alleles) == 2) & (mt.n_unsplit_alleles != 2))
-        | (hl.is_missing(mt["InbreedingCoeff"]))
-        | ((hl.is_defined(mt["InbreedingCoeff"])) & (mt["InbreedingCoeff"] < -0.3))
     )
     mt = mt.filter_rows(filter_conditions, keep=False)
+
+    # Exclude variants with inbreeding coefficient < -0.3
+
+    # InbreedingCoeff was calculated by function 'bi_allelic_site_inbreeding_expr'
+    mt = mt.annotate_rows(InbreedingCoeff=bi_allelic_site_inbreeding_expr(mt.GT))
+
+    # Filter variants with InbreedingCoeff (keep >= -0.3, exclude < -0.3)
+    mt = mt.filter_rows(mt.InbreedingCoeff >= -0.3, keep=True)
 
     # Restricted to high quality variants (GQ>=20, DP>=10)
     filter_condition = (mt.DP >= 10) & (mt.GQ >= 20)
