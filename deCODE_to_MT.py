@@ -93,8 +93,8 @@ def main(
     mt = mt.filter_rows(filter_conditions, keep=False)
 
     # Exclude variants with inbreeding coefficient < -0.3
+
     # InbreedingCoeff was calculated by function 'bi_allelic_site_inbreeding_expr'
-    mt = hl.variant_qc(mt)
     mt = mt.annotate_rows(InbreedingCoeff=bi_allelic_site_inbreeding_expr(mt.GT))
 
     # Filter variants with InbreedingCoeff (keep >= -0.3, exclude < -0.3)
