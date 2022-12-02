@@ -29,7 +29,7 @@ First perform QC on TOB's Hail MatrixTable data (following [gnomAD's blog](https
     * Variant filtering with allele-specific version of GATK Variant Quality Score Recalibration (AS-VQSR, cutoff values can be found in the global fields in TOB-WGS mt data; thresholds differ between SNVs and INDELs)
     * Restrict to bi-allelic variants 
     * Exclude variants with inbreeding coefficient < -0.3 or low quality (GQ < 20, DP < 10)
-        * Inbreeding coefficient is calculated using `bi_allelic_site_inbreeding_expr()` imported from `gnomad.utils.annotations`
+        * Inbreeding coefficient is calculated using `bi_allelic_site_inbreeding_expr()` imported from `gnomad.utils.annotations`, adapted from [`cpg_workflows`](https://github.com/populationgenomics/production-pipelines/blob/main/cpg_workflows/large_cohort/frequencies.py)
 * Step 4 - deCODE specific filters
     * Exclude variants with call rate < 0.99
     * Identify singleton mutations (mutations that occurred only once in our cohort)
