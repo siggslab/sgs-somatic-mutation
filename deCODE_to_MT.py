@@ -9,7 +9,7 @@ import hail as hl
 
 from cpg_utils.config import get_config
 from cpg_utils.hail_batch import dataset_path, output_path, init_batch, remote_tmpdir
-
+from gnomad.utils.annotations import bi_allelic_site_inbreeding_expr
 
 @click.command()
 @click.option("--input-mt")
@@ -72,6 +72,9 @@ def main(
     """
 
     mt = hl.variant_qc(mt)
+
+    mt = mt.annotate_rows(InbreedingCoeff=bi_allelic_site_inbreeding_expr(mt.GT))
+
 
     # Apply AS_VQSR filters
     # Restricted to bi-allelic variants
